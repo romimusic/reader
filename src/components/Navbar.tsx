@@ -11,7 +11,7 @@ const Navbar = () => {
         <div className='flex h-14 items-center justify-between border-b border-zinc-200' >
           <Link className='flex z-40 text-2xl font-bold text-zinc-700' href='/' > Reader </Link>
 
-          {/* todo: add movile menu */}
+          {/* todo: add mobile menu */}
 
           <div className='hidden items-center space-x-4 sm:flex' >
           <>
