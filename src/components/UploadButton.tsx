@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
 import UploadDropzone from "./UploadDropzone";
 

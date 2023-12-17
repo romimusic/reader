@@ -42,7 +42,7 @@ const FileDetail = async ({ params }: fileProps) => {
             <PDFRenderer />
           </div>
         </div>
-
+            {/* right side */}
         <div className="shrink-0 flex-[0.75] border-t border-gray-200 lg:w-96 lg:border-l lg:border-t-0">
           <ChatWrapper />
         </div>
