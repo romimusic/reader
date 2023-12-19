@@ -3,6 +3,7 @@ import { privateProcedure, publicProcedure, router } from './trpc';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
 import { z } from 'zod';
+import { Session } from 'inspector';
 
  
 export const appRouter = router({
@@ -37,9 +38,25 @@ export const appRouter = router({
 
     return await db.file.findMany({
       where: {
-        userId: userId
+        userId,
       }
     })
+  }),
+  getFile: privateProcedure
+    .input(z.object({ key: z.string()}))
+    .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      const file = await db.file.findFirst({
+        where: {
+          key: input.key,
+          userId
+        }
+      })
+
+      if (!file) throw new TRPCError({code: 'NOT_FOUND'});
+
+      return file;
   }),
   deleteFile: privateProcedure.input(z.object({
     id: z.string()
