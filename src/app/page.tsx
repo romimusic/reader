@@ -83,7 +83,7 @@ export default function Home() {
                   <Link 
                     href='/pricing' 
                     className='text-blue-700 underline underline-offset-2' > 
-                     pro plan
+                    pro plan
                   </Link>
                   .
                 </span>

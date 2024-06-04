@@ -1,11 +1,10 @@
 "use client"
 
-import { trpc } from "@/app/_trpc/client";
 import { AppRouter } from "@/server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink, loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-import { PropsWithChildren, useState } from "react";
+import { useState } from "react";
 
 
 export const api = createTRPCReact<AppRouter>();

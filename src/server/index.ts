@@ -3,7 +3,6 @@ import { privateProcedure, publicProcedure, router } from './trpc';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
 import { z } from 'zod';
-import { Session } from 'inspector';
 
  
 export const appRouter = router({
