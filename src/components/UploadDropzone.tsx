@@ -4,28 +4,43 @@ import { Cloud, File } from "lucide-react";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { Progress } from "./ui/progress";
-import { useUploadThing } from '@/lib/uploadthing';
-import { useToast } from './ui/use-toast';
+import { useUploadThing } from "@/lib/uploadthing";
+import { useToast } from "./ui/use-toast";
+import { trpc } from "@/app/_trpc/client";
+import { useRouter } from "next/navigation";
 
 
 const UploadDropzone = () => {
+  const router = useRouter();
+
   const [ isUploading, setIsUploading ] = useState<boolean>(false);
   const [ progress, setProgress ] = useState<number>(0);
   const { toast } = useToast();
 
+
   const { startUpload } = useUploadThing("pdfUploader");
+
+  const { mutate: startPolling } = trpc.getFile.useMutation({
+    onSuccess: (file) => {
+      console.log("onSuccess");
+      router.push(`/dashboard/${file.id}`);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const startSimulatedProgress = () => {
     setProgress(0);
 
     const interval = setInterval(() => {
-      setProgress(( prev ) => {
-        if (prev >= 95) {
+      setProgress(( prevProgress ) => {
+        if (prevProgress >= 95) {
           clearInterval(interval)
-          return prev
+          return prevProgress
         }
 
-        return prev + 5;
+        return prevProgress + 5;
       })
     }, 500)
 
@@ -44,25 +59,30 @@ const UploadDropzone = () => {
         const res = await startUpload(acceptedFiles);
         if (!res) {
           return toast({
-            title: "Something went wrong",
-            description: "Please try again later", 
-            variant: "destructive"
+            title: "Upload failed",
+            description: "Something went wrong while uploading your file",
+            variant: "destructive",
+            duration: 3000,
           })
         }
 
-        const [ file ] = res;
-        const key = file?.key;
+        const [ fileResponse ] = res;
 
+        const key = fileResponse?.key;
         if (!key) {
           return toast({
-            title: "Something went wrong",
-            description: "Please try again later", 
-            variant: "destructive"
+            title: "Upload failed",
+            description: "Something went wrong while uploading your file",
+            variant: "destructive",
+            duration: 3000,
           })
         }
+
 
         clearInterval(progressInterval);
         setProgress(100);
+
+        startPolling({ key });
       }}
     >
       {({ getRootProps, getInputProps, acceptedFiles }) => (
@@ -103,6 +123,12 @@ const UploadDropzone = () => {
                   </div>
                 ) : null
               }
+              <input 
+                {...getInputProps()} 
+                type="file" 
+                id="dropzone-file" 
+                className="hidden" 
+              />
             </label>
           </div>
         </div>
