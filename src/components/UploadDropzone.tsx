@@ -1,6 +1,6 @@
 'use client'
 
-import { Cloud, File } from "lucide-react";
+import { Cloud, File, Loader2 } from "lucide-react";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { Progress } from "./ui/progress";
@@ -25,6 +25,8 @@ const UploadDropzone = () => {
       console.log("onSuccess");
       router.push(`/dashboard/${file.id}`);
     },
+    // retry: 5, // retry 5 times before calling 'onError
+    // retryDelay: 1000, // retry after 1 second
     onError: (error) => {
       console.log(error);
     },
@@ -67,8 +69,8 @@ const UploadDropzone = () => {
         }
 
         const [ fileResponse ] = res;
-
         const key = fileResponse?.key;
+
         if (!key) {
           return toast({
             title: "Upload failed",
@@ -119,7 +121,18 @@ const UploadDropzone = () => {
               {
                 isUploading ? (
                   <div className="w-full mt-4 max-w-xs mx-auto" >
-                    <Progress value={progress} className="h-1 w-full bg-zinc-200" />
+                    <Progress 
+                      indicatorColor={progress === 100 ? "bg-green-500" : ""}
+                      value={progress} 
+                      className="h-1 w-full bg-zinc-200" 
+                    />
+                    { progress === 100 ? (
+                      <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
+                        <Loader2 className='w-3 h-3 animate-spin' />
+                        Redirecting ...
+                      </div>
+                    ) : null
+                    }
                   </div>
                 ) : null
               }

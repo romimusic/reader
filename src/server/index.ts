@@ -3,6 +3,7 @@ import { privateProcedure, publicProcedure, router } from './trpc';
 import { TRPCError } from '@trpc/server';
 import { db } from '@/db';
 import { z } from 'zod';
+import { fi } from 'date-fns/locale';
 
  
 export const appRouter = router({
@@ -30,16 +31,19 @@ export const appRouter = router({
       });
     }
 
+    console.log(user);
+    console.log(dbUser);
     return { success: true }
   }),
   getUserFiles: privateProcedure.query(async ({ ctx }) => {
     const { userId } = ctx;
 
-    return await db.file.findMany({
+    const files = await db.file.findMany({
       where: {
         userId,
       }
     })
+    return files;
   }),
   getFile: privateProcedure
     .input(z.object({ key: z.string()}))

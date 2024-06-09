@@ -5,9 +5,7 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 const f = createUploadthing();
 
 
-
 export const ourFileRouter = {
-
   pdfUploader: f({ pdf: { maxFileSize: "4MB" } })
     .middleware(async ({ req }) => {
       const { getUser } = getKindeServerSession();
@@ -20,7 +18,7 @@ export const ourFileRouter = {
       }
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      const createFile = await db.file.create({
+      const createdFile = await db.file.create({
         data: {
           key: file.key,
           name: file.name,
